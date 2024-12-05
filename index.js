@@ -29,7 +29,21 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    
+    const userCollection = client.db('AssetManagement').collection('UserInfo');
+
+     // using post operation for post food items on mongodb
+     app.post('/users', async (req, res) => {
+      const user = req.body;
+      // console.log(user);
+      const result = await userCollection.insertOne(user)
+      res.send(result);
+    })
+    app.get('/users/:email', async(req,res)=>{
+      const email = req.params.email
+      const query = { email: email };
+      const result = await userCollection.findOne(query)
+      res.send(result)
+    })
 
 
 
@@ -47,9 +61,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Asset Management system server is running')
+  res.send('Asset Management system server is running')
 })
 
 app.listen(port, () => {
-    console.log(`Asset Management system server is running on port: ${port}`)
+  console.log(`Asset Management system server is running on port: ${port}`)
 })
